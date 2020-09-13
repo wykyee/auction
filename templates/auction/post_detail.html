@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ post.id }}
+{% endblock %}
+
+{% block content %}
+    <div class="col-12">
+        <h1>{{ post.title }}</h1>
+        <hr>
+        <p>Начальная ставка: {{ post.initial_bet }}</p>
+        <hr>
+        <p>Цена выкупа: {{ post.permanent_price }}</p>
+        <hr>
+        <p>Ставка сейчас: {{ current_bet }}</p>
+    </div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Post list
+{% endblock %}
+
+{% block content %}
+    {% for post in posts %}
+        <div class="col-12">
+            {{ post.title }}
+            <hr>
+            {{ post.description }}
+            <hr>
+            <img src="{{ post.main_image.url }}" alt="main_img" height="400px">
+            <hr>
+            {{ post.created_at|date:"d.m.Y H:i" }} by {{ post.author.username }}
+            <a href="{{ post.get_absolute_url }}" class="btn btn-primary">Перейти</a>
+            <hr>
+
+            <br><br><br>
+        </div>
+    {% endfor %}
+{% endblock %}
