@@ -7,6 +7,7 @@ from .services import get_all_active_posts, get_post_by_pk
 
 
 class PostsList(ListView):
+    # TODO: current_bet needed in the context
     context_object_name = "posts"
     template_name = "auction/post_list.html"
     queryset = get_all_active_posts()
@@ -33,7 +34,10 @@ def make_bet(request, pk):
     # TODO: raise form.ValidationError if amount not in limits or smthing like that to see errors
     if request.method == "POST":
         certain_post = get_post_by_pk(pk)
-        current_bet = certain_post.bets.last().amount
+        try:
+            current_bet = certain_post.bets.last().amount
+        except AttributeError:
+            current_bet = certain_post.initial_bet
         amount = int(request.POST['amount'])
 
         if current_bet < amount < certain_post.permanent_price:
