@@ -1,6 +1,9 @@
+from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView
 
-from .services import get_all_active_posts
+from .forms import BetForm
+from .models import Post
+from .services import get_all_active_posts, get_post_by_pk
 
 
 class PostsList(ListView):
@@ -16,9 +19,31 @@ class PostDetail(DetailView):
 
     def get_context_data(self, **kwargs) -> dict:
         context = super(PostDetail, self).get_context_data()
-        try:
-            context["current_bet"] = context["post"].bets.last().amount
-        except AttributeError:
-            context["current_bet"] = context["post"].initial_bet
+        post_instance = context["post"]
 
+        try:
+            context["current_bet"] = post_instance.bets.last().amount
+        except AttributeError:
+            context["current_bet"] = post_instance.initial_bet
+        context["form"] = BetForm()
         return context
+
+
+def make_bet(request, pk):
+    # TODO: raise form.ValidationError if amount not in limits or smthing like that to see errors
+    if request.method == "POST":
+        certain_post = get_post_by_pk(pk)
+        current_bet = certain_post.bets.last().amount
+        amount = int(request.POST['amount'])
+
+        if current_bet < amount < certain_post.permanent_price:
+            form = BetForm(data=request.POST,
+                           better=request.user,
+                           post=certain_post)
+            if form.is_valid():
+                form.save()
+                return redirect('post-detail', pk=pk)
+        else:
+            return redirect('post-detail', pk=pk)
+    else:
+        return redirect("post-list")

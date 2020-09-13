@@ -12,10 +12,12 @@ class Profile(AbstractUser):
     info = models.TextField(null=True, blank=True)
 
     class Meta:
-        db_table = 'Profile'
+        db_table = "Profile"
+        verbose_name = "Профиль"
+        verbose_name_plural = "Профили"
 
     def __str__(self) -> str:
-        return f'{self.id}:{self.username}'
+        return f"{self.get_full_name()}"
 
     def delete(self, *args, **kwargs) -> None:
         """
