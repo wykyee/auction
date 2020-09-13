@@ -13,5 +13,12 @@
         <p>Цена выкупа: {{ post.permanent_price }}</p>
         <hr>
         <p>Ставка сейчас: {{ current_bet }}</p>
+        <form method="POST" action="{% url 'make-bet' post.pk %}">{% csrf_token %}
+            {% for field in form %}
+                {{ field }}
+            {% endfor %}
+            <button type="submit">Принять ставку</button>
+        </form>
+
     </div>
 {% endblock %}
