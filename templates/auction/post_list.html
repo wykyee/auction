@@ -5,25 +5,31 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container mt-5">
+    <div class="container-fluid mt-4">
         <div class="card-columns">
             {% for post in posts %}
-                <div class="card mb-4" style="width: 20rem;">
-                    <div class="card-body" style="padding: 0;">
-                        <a href="{{ post.main_image.url }}" target="_blank">
-                            <img src="{{ post.main_image.url }}" class="img-responsive img-thumbnail" alt="Lights" style="width:100%">
-                        </a>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <h4 style="margin-bottom: 0;">{{ post.title }}</h4>
+                <div class="card mb-4 border-dark" style="width: 22rem;">
+                    <a href="{{ post.get_absolute_url }}" class="text-white"
+                       style="position:absolute; left: 15px; top: 10px;"><b>{{ post.title }}</b></a>
+                    <a href="{{ post.get_absolute_url }}">
+                        <img src="{{ post.main_image.url }}" class="card-img-top" alt="Lights"
+                             style="width:100%">
+                    </a>
+                    <div class="card-body" style="padding: 0; font-size: small">
+                    <ul class="list-group list-group-flush"></ul>
+                        <li class="list-group-item card-text">{{ post.description|truncatechars:120 }}</li>
+                        <li class="list-group-item card-text">
+                            Последняя ставка:
+                            {% if post.bets.last.amount %}
+                                {{ post.bets.last.amount }}
+                            {% else %}
+                                {{ post.initial_bet }}
+                            {% endif %}
+                            $
                         </li>
-                        <li class="list-group-item">{{ post.description }}</li>
-                        <li class="list-group-item">Начальная ставка: {{ post.initial_bet }}</li>
-                        <li class="list-group-item">Цена выкупа: {{ post.permanent_price }}</li>
-                    </ul>
-                    <div class="card-footer bg-transparent text-center">
-                        <a href="{{ post.get_absolute_url }}" class="btn btn-primary">Подробнее</a>
+                        <li class="list-group-item card-text">
+                            Цена выкупа: {{ post.permanent_price }} $
+                        </li>
                     </div>
                 </div>
             {% endfor %}
