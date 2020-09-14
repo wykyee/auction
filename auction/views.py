@@ -7,7 +7,6 @@ from .services import get_all_active_posts, get_post_by_pk
 
 
 class PostsList(ListView):
-    # TODO: current_bet needed in the context
     context_object_name = "posts"
     template_name = "auction/post_list.html"
     queryset = get_all_active_posts()
