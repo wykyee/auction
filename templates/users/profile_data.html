@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Профиль {{ user.username }}
+{% endblock %}
+
+{% block content %}
+    <div class="col-12">
+        {% if user.avatar %}
+            <img src="{{ user.avatar.url }}" alt="profile avatar" height="250px">
+        {% else %}
+            <img src="url_for_standart_avatar" alt="profile avatar">
+        {% endif %}<hr>
+        {{ user.username }}<hr>
+        Имя: {{ user.first_name }}
+        <br>Фамилия: {{ user.last_name }}
+        <br>Дата рождения: {{ user.birthdate|date:"Y.m.d"}}<hr>
+        Email: {{ user.email }}<hr>
+        О себе: {{ user.info }}<hr>
+        <a href="{% url 'profile-change' %}" class="btn btn-primary">Изменить профиль</a>
+
+    </div>
+{% endblock %}
