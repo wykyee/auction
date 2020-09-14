@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.translation import ugettext_lazy as _
 
 from auction.models import Bet
 
@@ -10,11 +11,26 @@ class BetForm(forms.ModelForm):
         """
         self.better = kwargs.pop('better', None)
         self.post = kwargs.pop('post', None)
+        self.current_bet = kwargs.pop('current_bet', None)
         super(BetForm, self).__init__(*args, **kwargs)
 
     class Meta:
         model = Bet
         fields = ["amount", ]
+        labels = {
+            "amount": _("Количество"),
+        }
+
+    def clean_amount(self) -> int:
+        """
+        Checks if input amount is in limits.
+        """
+        data = self.cleaned_data["amount"]
+
+        if self.current_bet >= data or data >= self.post.permanent_price:
+            self.add_error("amount", _("Введите валидное значение"))
+
+        return data
 
     def save(self, commit=True):
         """

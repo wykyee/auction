@@ -1,43 +1,32 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Post list
+    Список машин
 {% endblock %}
 
 {% block content %}
     <div class="container mt-5">
         <div class="card-columns">
-    {% for post in posts %}
-        <div class="card mb-4" style="width: 20rem;">
-            <div class="card-body" style="padding: 0;">
-                <a href="{{ post.main_image.url }}" target="_blank">
-                    <img src="{{ post.main_image.url }}" class="img-responsive img-thumbnail" alt="Lights"
-                         style="width:100%">
-                </a>
-            </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item"><h4 style="margin-bottom: 0;">{{ post.title }}</h4></li>
-                <li class="list-group-item">{{ post.description }}</li>
-                <li class="list-group-item">Last bid: {{ post.initial_bet }}</li>
-                <li class="list-group-item">Buyout price: {{ post.permanent_price }}</li>
-            </ul>
-            <div class="card-footer bg-transparent text-center"><a href="{{ post.get_absolute_url }}" class="btn btn-primary">Show
-                more...</a></div>
-        </div>
-{#        <div class="col-12">#}
-{#            {{ post.title }}#}
-{#            <hr>#}
-{#            {{ post.description }}#}
-{#            <hr>#}
-{#            <img src="{{ post.main_image.url }}" alt="main_img" height="400px">#}
-{#            <hr>#}
-{#            {{ post.created_at|date:"d.m.Y H:i" }} by {{ post.author }}#}
-{#            <a href="{{ post.get_absolute_url }}" class="btn btn-primary">Перейти</a>#}
-{#            <hr>#}
-{##}
-{#            <br><br><br>#}
-{#        </div>#}
-    {% endfor %}
+            {% for post in posts %}
+                <div class="card mb-4" style="width: 20rem;">
+                    <div class="card-body" style="padding: 0;">
+                        <a href="{{ post.main_image.url }}" target="_blank">
+                            <img src="{{ post.main_image.url }}" class="img-responsive img-thumbnail" alt="Lights" style="width:100%">
+                        </a>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <h4 style="margin-bottom: 0;">{{ post.title }}</h4>
+                        </li>
+                        <li class="list-group-item">{{ post.description }}</li>
+                        <li class="list-group-item">Начальная ставка: {{ post.initial_bet }}</li>
+                        <li class="list-group-item">Цена выкупа: {{ post.permanent_price }}</li>
+                    </ul>
+                    <div class="card-footer bg-transparent text-center">
+                        <a href="{{ post.get_absolute_url }}" class="btn btn-primary">Подробнее</a>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
     </div>
 {% endblock %}

@@ -53,7 +53,7 @@ class Bet(models.Model):
     amount = models.PositiveIntegerField()
     better = models.ForeignKey(Profile, on_delete=models.CASCADE)
     post = models.ForeignKey(
-        Post, on_delete=models.CASCADE, related_name='bets', related_query_name='bets'
+        Post, on_delete=models.CASCADE, related_name='bets'
     )
     created_at = models.DateTimeField(auto_now_add=True)
 

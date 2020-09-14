@@ -1,5 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.urls import reverse
+from django.utils.text import slugify
 
 
 class Profile(AbstractUser):
@@ -10,6 +12,7 @@ class Profile(AbstractUser):
         upload_to='users/avatars/', null=True, blank=True
     )
     info = models.TextField(null=True, blank=True)
+    birthdate = models.DateField(null=True, blank=True)
 
     class Meta:
         db_table = "Profile"
@@ -25,4 +28,3 @@ class Profile(AbstractUser):
         """
         self.avatar.delete()
         super().delete(*args, **kwargs)
-
