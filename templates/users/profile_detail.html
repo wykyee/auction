@@ -9,7 +9,7 @@
         {% if user.avatar %}
             <img src="{{ user.avatar.url }}" alt="profile avatar" height="250px">
         {% else %}
-            <img src="url_for_standart_avatar" alt="profile avatar">
+            <img src="/media/users/avatars/default.jpg" alt="profile avatar">
         {% endif %}<hr>
         {{ user.username }}<hr>
         Имя: {{ user.first_name }}
