@@ -5,7 +5,8 @@
     <title>{% block title %}Easy auction{% endblock %}</title>
 
     {# bootsrap #}
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
@@ -20,7 +21,9 @@
                 <a href="{% url 'post-list' %}" class="navbar-brand">EasyAuction</a>
             </li>
             <li class="nav-item dropdown text-center">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="#"
+                   id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
                     <span class="d-xl-block d-none"></span>
                     <span class="d-none d-sm-inline px-1">Filter</span>
                 </a>
@@ -34,34 +37,35 @@
         </ul>
         <ul class="nav navbar-nav">
             {% if not request.user.is_authenticated %}
-            <li class="nav-item text-center" id="signup-btn">
-                <a href="#" class="nav-link" data-toggle="modal" data-target="#">
-                    <span class="d-none d-sm-inline d-xl-block px-1">Зарегистрироваться</span>
-                </a>
-            </li>
-            <li class="nav-item text-center" id="login-btn">
-                <a href="#" class="nav-link" data-toggle="modal" data-target="#">
-                    <span class="d-none d-sm-inline d-xl-block px-1">Войти</span>
-                </a>
-            </li>
+                <li class="nav-item text-center" id="signup-btn">
+                    <a href="{% url 'profile-register' %}" class="nav-link">
+                        <span class="d-none d-sm-inline d-xl-block px-1">Зарегистрироваться</span>
+                    </a>
+                </li>
+                <li class="nav-item text-center" id="login-btn">
+                    <a href="{% url 'profile-login' %}" class="nav-link">
+                        <span class="d-none d-sm-inline d-xl-block px-1">Войти</span>
+                    </a>
+                </li>
             {% else %}
-            <li class="nav-item text-center" id="logout-btn">
-                <a href="{% url 'profile-data' %}" class="nav-link" >
-                    <span class="d-none d-sm-inline d-xl-block px-1">Профиль</span>
-                </a>
-            </li>
-            <li class="nav-item text-center" id="logout-btn">
-                <a href="#" class="nav-link" data-toggle="modal" data-target="#">
-                    <span class="d-none d-sm-inline d-xl-block px-1">Выйти</span>
-                </a>
-            </li>
+                <li class="nav-item text-center" id="logout-btn">
+                    <a href="{% url 'profile-data' %}" class="nav-link">
+                        <span class="d-none d-sm-inline d-xl-block px-1">Профиль</span>
+                    </a>
+                </li>
+                <li class="nav-item text-center" id="logout-btn">
+                    <a href="{% url 'profile-logout' %}" class="nav-link">
+                        <span class="d-none d-sm-inline d-xl-block px-1">Выйти</span>
+                    </a>
+                </li>
             {% endif %}
         </ul>
     </div>
 </nav>
-{% block content %}
-    Nothing must be here.
-{% endblock %}
-
+<div class="container">
+    {% block content %}
+        Nothing must be here.
+    {% endblock %}
+</div>
 </body>
 </html>
