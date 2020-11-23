@@ -5,6 +5,12 @@
 {% endblock %}
 
 {% block content %}
+    <div class="container-fluid sort_form bg-light pt-3 pb-3 text-center">
+        <form method="GET">
+            {{ sort_form }}
+            <button class="btn btn-info">Сортировать</button>
+        </form>
+    </div>
     <div class="container-fluid mt-4">
         <div class="card-columns">
             {% for post in posts %}
@@ -12,8 +18,12 @@
                     <a href="{{ post.get_absolute_url }}" class="text-white"
                        style="position:absolute; left: 15px; top: 10px;"><b>{{ post.title }}</b></a>
                     <a href="{{ post.get_absolute_url }}">
+                        {% if post.main_image %}
                         <img src="{{ post.main_image.url }}" class="card-img-top" alt="Lights"
                              style="width:100%">
+                        {% else %}
+                        <img src="/media/auction/images/default_img.jpg" class="card-img-top" alt="Default car">
+                        {% endif %}
                     </a>
                     <div class="card-body" style="padding: 0; font-size: small">
                     <ul class="list-group list-group-flush"></ul>

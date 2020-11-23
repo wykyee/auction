@@ -20,19 +20,8 @@
             <li class="nav-item text-center">
                 <a href="{% url 'post-list' %}" class="navbar-brand">EasyAuction</a>
             </li>
-            <li class="nav-item dropdown text-center">
-                <a class="nav-link dropdown-toggle" href="#"
-                   id="navbarDropdown" role="button" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
-                    <span class="d-xl-block d-none"></span>
-                    <span class="d-none d-sm-inline px-1">Filter</span>
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
-                </div>
+            <li class="nav-item text-center">
+                <a href="{% url 'post-create' %}" class="nav-link text-info btn">Создать лот</a>
             </li>
         </ul>
         <ul class="nav navbar-nav">
@@ -62,10 +51,8 @@
         </ul>
     </div>
 </nav>
-<div class="container">
     {% block content %}
         Nothing must be here.
     {% endblock %}
-</div>
 </body>
 </html>

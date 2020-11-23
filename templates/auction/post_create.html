@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Создание лота{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="font-weight-normal">Создать новый лот</h1>
+        <form method="POST" enctype="multipart/form-data"
+              class="mb-3">{% csrf_token %}
+            {% for field in form %}
+                {% if not field.is_hidden %}
+                    <div class="form-group">
+                        <label for="{{ field.auto_id }}">{{ field.label_tag }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <div class="text-info"
+                                 style="font-size: 14px"> {{ field.help_text }} </div>
+                        {% endif %}
+                        {% if field.errors %}
+                            <div class="text-danger"> {{ field.errors }} </div>
+                        {% endif %}
+                    </div>
+
+                {% endif %}
+            {% endfor %}
+            <input type="submit" class="btn btn-success" value="Создать">
+            <a href="{% url "post-list" %}" class="btn btn-danger">Отменить</a>
+        </form>
+    </div>
+{% endblock %}
+

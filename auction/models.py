@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
+from django.utils.translation import ugettext_lazy as _
+
 
 Profile = get_user_model()
 
@@ -9,15 +11,17 @@ class Post(models.Model):
     """
     Model for representing post with info of car.
     """
-    title = models.CharField("Название", max_length=120)
-    permanent_price = models.PositiveIntegerField()
-    initial_bet = models.PositiveIntegerField()
-    author = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    description = models.TextField()
+    title = models.CharField(_("Название"), max_length=120)
+    permanent_price = models.PositiveIntegerField(_("Цена выкупа"))
+    initial_bet = models.PositiveIntegerField(_("Начальная ставка"))
+    author = models.ForeignKey(Profile, on_delete=models.CASCADE,
+                               verbose_name=_("Автор"))
+    description = models.TextField(_("Описание"))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
-    main_image = models.ImageField(upload_to="auction/images")
+    main_image = models.ImageField(upload_to="auction/images",
+                                   verbose_name=_("Отображаемая картинка"))
 
     class Meta:
         db_table = "Post"
