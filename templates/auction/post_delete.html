@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}
+    Удаление лота
+{% endblock %}
+
+
+{% block content %}
+    <a href="{% url 'post-detail' object.pk %}"
+           class="btn btn-info btn-lg active mt-3 mb-3 ml-3">
+            &#8592 Назад
+    </a>
+    <div class="container">
+        <form method="POST">{% csrf_token %}
+            <h3>Выдействительно желаете удалить пост "{{ object.title }}"?</h3>
+            <input type="submit" class="btn btn-danger" value="Подтверждаю">
+            <a class="btn btn-info" href="{% url 'post-detail' object.pk %}">Отменить</a>
+        </form>
+    </div>
+{% endblock %}

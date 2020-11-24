@@ -5,115 +5,165 @@ from auction.models import Bet, Post
 
 
 class BetForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        """
+	def __init__(self, *args, **kwargs):
+		"""
         Gets author for initial parameter to save it as author of post.
         """
-        self.better = kwargs.pop('better', None)
-        self.post = kwargs.pop('post', None)
-        self.current_bet = kwargs.pop('current_bet', None)
-        super(BetForm, self).__init__(*args, **kwargs)
+		self.better = kwargs.pop('better', None)
+		self.post = kwargs.pop('post', None)
+		self.current_bet = kwargs.pop('current_bet', None)
+		super(BetForm, self).__init__(*args, **kwargs)
 
-    class Meta:
-        model = Bet
-        fields = ["amount", ]
-        labels = {
-            "amount": _("Ставка"),
-        }
+	class Meta:
+		model = Bet
+		fields = ["amount", ]
+		labels = {
+			"amount": _("Ставка"),
+		}
 
-    def clean_amount(self) -> int:
-        """
+	def clean_amount(self) -> int:
+		"""
         Checks if input amount is in limits.
         """
-        data = self.cleaned_data["amount"]
+		data = self.cleaned_data["amount"]
 
-        if self.current_bet >= data or data >= self.post.permanent_price:
-            self.add_error("amount", _("Ваша ставка невалидна"))
+		if self.current_bet >= data or data >= self.post.permanent_price:
+			self.add_error("amount", _("Ваша ставка невалидна"))
 
-        return data
+		return data
 
-    def save(self, commit=True):
-        """
+	def save(self, commit=True):
+		"""
         Saves user from request automatically as better and
         post from init as post instance.
         """
-        bet = super(BetForm, self).save(commit=False)
-        bet.better = self.better
-        bet.post = self.post
-        if commit:
-            bet.save()
-        return bet
+		bet = super(BetForm, self).save(commit=False)
+		bet.better = self.better
+		bet.post = self.post
+		if commit:
+			bet.save()
+		return bet
 
 
-class PostCreateForm(forms.ModelForm):
-    title = forms.CharField(
-        widget=forms.TextInput(attrs={"class": "form-control"})
-    )
-    main_image = forms.FileField(
-        required=False, widget=forms.FileInput(attrs={"class": "form-control"})
-    )
-    description = forms.CharField(
-        required=False, widget=forms.Textarea(attrs={"class": "form-control"})
-    )
+class PostForm(forms.ModelForm):
+	title = forms.CharField(
+		widget=forms.TextInput(attrs={"class": "form-control"}),
+		label=_("Название"),
+	)
+	main_image = forms.FileField(
+		required=False,
+		widget=forms.FileInput(attrs={"class": "custom-file-input"}),
+		label=_("Отображаемая картинка")
+	)
+	description = forms.CharField(
+		required=False, widget=forms.Textarea(attrs={"class": "form-control"}),
+		label=_("Описание"),
+	)
 
-    class Meta:
-        model = Post
-        fields = ("title", "permanent_price",
-                  "initial_bet", "description", "main_image")
-        widgets = {
-            "permanent_price": forms.NumberInput(attrs={"class": "form-control"}),
-            "initial_bet": forms.NumberInput(attrs={"class": "form-control"}),
-        }
-        
-    def __init__(self, *args, **kwargs):
-        self.author = kwargs.pop("author")
-        super(PostCreateForm, self).__init__(*args, **kwargs)
-        
-    def save(self, commit=True):
-        """
+	class Meta:
+		model = Post
+		fields = ("title", "permanent_price",
+		          "initial_bet", "description", "main_image")
+		widgets = {
+			"permanent_price": forms.NumberInput(
+				attrs={"class": "form-control"}),
+			"initial_bet": forms.NumberInput(attrs={"class": "form-control"}),
+		}
+
+	def __init__(self, *args, **kwargs):
+		self.author = kwargs.pop("author")
+		super().__init__(*args, **kwargs)
+
+	def save(self, commit=True):
+		"""
         Saves user from request as author of created post.
         """
-        post = super(PostCreateForm, self).save(commit=False)
-        post.author = self.author
-        if commit:
-            post.save()    
-        return post
-    
-    def clean(self):
-        """
+		post = super().save(commit=False)
+		post.author = self.author
+		if commit:
+			post.save()
+		return post
+
+	def clean(self):
+		"""
         Validates data in permanent_price and initial_bet
         """
-        cleaned_data = super(PostCreateForm, self).clean()
-        initial_bet = cleaned_data["initial_bet"]
-        permanent_price = cleaned_data["permanent_price"]
+		cleaned_data = super().clean()
+		initial_bet = cleaned_data["initial_bet"]
+		permanent_price = cleaned_data["permanent_price"]
 
-        if initial_bet == 0:
-            self.add_error("initial_bet",
-                           _("Начальная ставка не может быть < 0"))
+		if initial_bet == 0:
+			self.add_error("initial_bet",
+			               _("Начальная ставка не может быть < 0"))
 
-        if permanent_price == 0:
-            self.add_error("permanent_price", _("Цена выкупа не может быть < 0"))
+		if permanent_price == 0:
+			self.add_error("permanent_price",
+			               _("Цена выкупа не может быть < 0"))
 
-        if permanent_price <= initial_bet:
-            self.add_error("permanent_price",
-                           _("Цена выкупа не может быть меньше ставки"))
+		if permanent_price <= initial_bet:
+			self.add_error("permanent_price",
+			               _("Цена выкупа не может быть меньше ставки"))
 
-        return cleaned_data
+		return cleaned_data
+
+
+class PostCreateForm(PostForm):
+	pass
+
+
+class PostUpdateForm(PostForm):
+	class Meta:
+		model = Post
+		fields = ("title", "permanent_price", "description", "main_image")
+		widgets = {
+			"permanent_price": forms.NumberInput(
+				attrs={"class": "form-control"}),
+		}
+
+	def clean(self):
+		"""
+        Validates data in permanent_price and current bet
+        """
+		cleaned_data = super(PostForm, self).clean()
+		permanent_price = cleaned_data["permanent_price"]
+		try:
+			bet = self.instance.last_bet.amount
+		except AttributeError:
+			bet = self.instance.initial_bet
+
+		if permanent_price == 0:
+			self.add_error("permanent_price",
+			               _("Цена выкупа не может быть < 0"))
+
+		if permanent_price <= bet:
+			self.add_error("permanent_price",
+			               _(
+				               "Цена выкупа не может быть меньше действующей ставки"))
+
+		return cleaned_data
 
 
 class PostSortForm(forms.Form):
-    PRICE_CHOICES = (
-        ("from_cheapest", _("От дешевых к дорогим")),
-        ("from_expensive", _("От дорогих к дешевым")),
-    )
-    CREATED_CHOICES = (
-        ("newest", _("От новых к старым")),
-        ("oldest", _("От старых к новым")),
-    )
+	PRICE_CHOICES = (
+		("from_cheapest", _("От дешевых к дорогим")),
+		("from_expensive", _("От дорогих к дешевым")),
+	)
+	CREATED_CHOICES = (
+		("from_newest", _("От новых к старым")),
+		("from_oldest", _("От старых к новым")),
+	)
 
-    price = forms.ChoiceField(choices=PRICE_CHOICES,
-                              required=False, label=_("Цена"))
-    created = forms.ChoiceField(choices=CREATED_CHOICES,
-                                required=False, label=_("Создано"))
-    author = forms.CharField(widget=forms.TextInput(),
-                             required=False, label=_("Автор"))
+	price = forms.ChoiceField(
+		choices=PRICE_CHOICES, required=False,
+		label=_("Цена"), widget=forms.Select(attrs={"class": "form-control"})
+	)
+	created = forms.ChoiceField(
+		choices=CREATED_CHOICES, required=False,
+		label=_("Создано"),
+		widget=forms.Select(attrs={"class": "form-control"})
+	)
+	author = forms.CharField(
+		widget=forms.TextInput(
+			attrs={"class": "form-control", "placeholder": _("Имя автора")}
+		), required=False, label=_("Автор")
+	)

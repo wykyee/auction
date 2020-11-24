@@ -5,33 +5,64 @@
 {% endblock %}
 
 {% block content %}
-    <div class="col-12">
-        <h1>{{ post.title }}</h1>
-        <hr>
-        <p>Начальная ставка: {{ post.initial_bet }}</p>
-        <hr>
-        <p>Цена выкупа: {{ post.permanent_price }}</p>
-        <hr>
-        <p>Ставка сейчас: {{ current_bet }}</p>
-        <form method="POST" action="{% url 'make-bet' post.pk %}">{% csrf_token %}
-            {% for field in form %}
-                {% if not field.is_hidden %}
-                    <div class="form-group">
-                        <label for="{{ field.auto_id }}">{{ field.label_tag }}</label>
-                        {{ field }}
-                        {% if field.help_text %}
-                            <div class="text-info" style="font-size: 14px"> {{ field.help_text }} </div>
-                        {% endif %}
-                        {% if field.errors %}
-                            <div class="text-danger"> {{ field.errors }} </div>
-                        {% endif %}
-                    </div>
-
-                {% endif %}
+    <div class="container">
+        <div class="col-12">
+            <h1 class="text-center">{{ post.title }}</h1>
+            <hr>
+            <img
+            {% if post.main_image %}
+                 src="{{ post.main_image.url }}"
+            {% else %}
+                src="/media/auction/images/default_img.jpg"
+            {% endif %}
+            alt="Отображаемая картинка" class="rounded mx-auto d-block" style="width: 100%;">
+            {% for image in post.images %}
+                <img src="{{ image.url }}" alt="Картинка лота" class="" style="width: 10%;">
             {% endfor %}
-            <button type="submit" class="btn btn-success">Принять ставку</button>
-            <a href="" class="btn btn-info">Выкупить</a>
-        </form>
+            <hr>
+            <p>Описание: {{ post.description }}</p>
+            <hr>
+            <p>Начальная ставка: {{ post.initial_bet }}</p>
+            <hr>
+            <p>Цена выкупа: {{ post.permanent_price }}</p>
+            <hr>
 
+            <p>Ставка сейчас:
+                {% if post.last_bet %}
+                    {{ post.last_bet.amount }}
+                {% else %}
+                    {{ post.initial_bet }}
+                {% endif %}
+            </p>
+            <form method="POST"
+                  action="{% url 'make-bet' post.pk %}">{% csrf_token %}
+                {% for field in form %}
+                    {% if not field.is_hidden %}
+                        <div class="form-group">
+                            <label for="{{ field.auto_id }}">{{ field.label_tag }}</label>
+                            {{ field }}
+                            {% if field.help_text %}
+                                <div class="text-info"
+                                     style="font-size: 14px"> {{ field.help_text }} </div>
+                            {% endif %}
+                            {% if field.errors %}
+                                <div class="text-danger"> {{ field.errors }} </div>
+                            {% endif %}
+                        </div>
+
+                    {% endif %}
+                {% endfor %}
+                <button type="submit" class="btn btn-success">Принять ставку
+                </button>
+                <a href="" class="btn btn-info">Выкупить</a>
+            </form>
+            {% if can_modify %}
+                <div class="mt-3">
+                    <a href="{{ post.get_update_url }}" class="btn btn-info">Обновить</a>
+                    <a href="{{ post.get_delete_url }}" class="btn btn-danger">Удалить</a>
+                </div>
+            {% endif %}
+
+        </div>
     </div>
 {% endblock %}

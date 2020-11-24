@@ -7,8 +7,18 @@
 {% block content %}
     <div class="container-fluid sort_form bg-light pt-3 pb-3 text-center">
         <form method="GET">
-            {{ sort_form }}
-            <button class="btn btn-info">Сортировать</button>
+            <div class="row">
+                <div class="col-md-3 col-12">
+                    {{sort_form.price}}
+                </div>
+                <div class="col-md-3 col-12">
+                    {{sort_form.created}}
+                </div>
+                <div class="col-md-3 col-12">
+                    {{sort_form.author}}
+                </div>
+                <button class="btn btn-info">Сортировать</button>
+            </div>
         </form>
     </div>
     <div class="container-fluid mt-4">

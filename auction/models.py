@@ -32,8 +32,18 @@ class Post(models.Model):
     def __str__(self) -> str:
         return f"{self.title}"
 
+    @property
+    def last_bet(self):
+        return self.bets.last()
+
     def get_absolute_url(self) -> str:
         return reverse("post-detail", args=[self.pk])
+
+    def get_update_url(self) -> str:
+        return reverse("post-update", kwargs={"pk": self.pk})
+
+    def get_delete_url(self) -> str:
+        return reverse("post-delete", kwargs={"pk": self.pk})
 
 
 class PostImage(models.Model):
@@ -43,7 +53,8 @@ class PostImage(models.Model):
     image = models.ImageField(
         upload_to="auction/images/", blank=True, null=True
     )
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE,
+                             related_name="post_images")
 
     class Meta:
         verbose_name = "Картинка к посту"

@@ -20,9 +20,14 @@
             <li class="nav-item text-center">
                 <a href="{% url 'post-list' %}" class="navbar-brand">EasyAuction</a>
             </li>
+            {% if user.is_authenticated %}
             <li class="nav-item text-center">
                 <a href="{% url 'post-create' %}" class="nav-link text-info btn">Создать лот</a>
             </li>
+            <li class="nav-item text-center">
+                <a href="" class="nav-link text-info btn">Избранное</a>
+            </li>
+            {% endif %}
         </ul>
         <ul class="nav navbar-nav">
             {% if not request.user.is_authenticated %}
@@ -53,6 +58,9 @@
 </nav>
     {% block content %}
         Nothing must be here.
+    {% endblock %}
+    {% block scripts %}
+
     {% endblock %}
 </body>
 </html>
