@@ -1,13 +1,15 @@
 from django.contrib.auth import get_user_model, logout, authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, UpdateView, CreateView
+from django.views.generic import ListView, UpdateView, CreateView, FormView
 from django.views.generic.base import View, RedirectView
 
-from users.forms import LoginForm, ProfileForm, ProfileRegisterForm
+from users.forms import (
+    LoginForm, ProfileForm, ProfileRegisterForm, ProfileChangePasswordForm
+)
 from users.services import (
     get_user_from_pk
 )
@@ -19,7 +21,7 @@ class BetsList(ListView):
     pass
 
 
-class ProfileDetailView(View):
+class ProfileDetailView(LoginRequiredMixin, View):
     def get(self, request: HttpRequest) -> HttpResponse:
         context = {
             "user": request.user,
@@ -47,7 +49,7 @@ class ProfileRegisterView(CreateView):
         return reverse_lazy('post-list')
 
 
-class ProfileChangeView(UpdateView):
+class ProfileChangeView(LoginRequiredMixin, UpdateView):
     template_name = "users/profile_update.html"
     form_class = ProfileForm
     success_url = reverse_lazy("profile-data")
@@ -78,4 +80,31 @@ class ProfileLogoutView(LoginRequiredMixin, RedirectView):
     def get(self, request, *args, **kwargs):
         logout(request)
         return super().get(request, *args, **kwargs)
+
+
+class ProfileChangePasswordView(LoginRequiredMixin, FormView):
+    """
+    Provides users the ability to change password
+    """
+    template_name = "users/change_password.html"
+    success_url = reverse_lazy("profile-data")
+
+    def get_form(self, **kwargs):
+        return ProfileChangePasswordForm(
+            **self.get_form_kwargs(),
+            instance=self.request.user
+        )
+
+    def form_valid(self, form):
+        """
+        Automatically login after changing password.
+        """
+        form.save()
+        username = self.request.user.username
+        password = self.request.POST['new_password1']
+        profile = authenticate(username=username, password=password)
+        login(self.request, profile)
+
+        return HttpResponseRedirect(self.get_success_url())
+
 

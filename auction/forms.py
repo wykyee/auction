@@ -145,10 +145,12 @@ class PostUpdateForm(PostForm):
 
 class PostSortForm(forms.Form):
 	PRICE_CHOICES = (
+		("", "------------"),
 		("from_cheapest", _("От дешевых к дорогим")),
 		("from_expensive", _("От дорогих к дешевым")),
 	)
 	CREATED_CHOICES = (
+		("", "------------"),
 		("from_newest", _("От новых к старым")),
 		("from_oldest", _("От старых к новым")),
 	)
@@ -166,4 +168,9 @@ class PostSortForm(forms.Form):
 		widget=forms.TextInput(
 			attrs={"class": "form-control", "placeholder": _("Имя автора")}
 		), required=False, label=_("Автор")
+	)
+	post_title = forms.CharField(
+		widget=forms.TextInput(
+			attrs={"class": "form-control", "placeholder": _("Название лота")}
+		), required=False, label=_("Название лота")
 	)

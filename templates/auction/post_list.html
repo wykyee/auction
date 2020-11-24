@@ -8,15 +8,19 @@
     <div class="container-fluid sort_form bg-light pt-3 pb-3 text-center">
         <form method="GET">
             <div class="row">
-                <div class="col-md-3 col-12">
+                <div class="col-md-2 col-12">
                     {{sort_form.price}}
                 </div>
-                <div class="col-md-3 col-12">
+                <div class="col-md-2 col-12">
                     {{sort_form.created}}
                 </div>
-                <div class="col-md-3 col-12">
+                <div class="col-md-2 col-12">
                     {{sort_form.author}}
                 </div>
+                <div class="col-md-2 col-12">
+                    {{sort_form.post_title}}
+                </div>
+                <input type="hidden" name="only_favorites" value="{{ show_favorites }}">
                 <button class="btn btn-info">Сортировать</button>
             </div>
         </form>
@@ -25,8 +29,8 @@
         <div class="card-columns">
             {% for post in posts %}
                 <div class="card mb-4 border-dark shadow">
-                    <a href="{{ post.get_absolute_url }}" class="text-white"
-                       style="position:absolute; left: 15px; top: 10px;"><b>{{ post.title }}</b></a>
+                    <a href="{{ post.get_absolute_url }}" class="text-dark"
+                       style="position:absolute; left: 15px; top: 10px;"><b>{{ post.title|truncatechars:"35" }}</b></a>
                     <a href="{{ post.get_absolute_url }}">
                         {% if post.main_image %}
                         <img src="{{ post.main_image.url }}" class="card-img-top" alt="Lights"
@@ -36,7 +40,7 @@
                         {% endif %}
                     </a>
                     <div class="card-body p-0 text-sm">
-                    <ul class="list-group list-group-flush"></ul>
+                    <ul class="list-group list-group-flush">
                         <li class="list-group-item card-text">{{ post.description|truncatechars:120 }}</li>
                         <li class="list-group-item card-text">
                             Последняя ставка:
@@ -50,6 +54,7 @@
                         <li class="list-group-item card-text">
                             Цена выкупа: {{ post.permanent_price }} $
                         </li>
+                    </ul>
                     </div>
                 </div>
             {% endfor %}

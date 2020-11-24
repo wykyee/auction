@@ -15,13 +15,14 @@ class Post(models.Model):
     permanent_price = models.PositiveIntegerField(_("Цена выкупа"))
     initial_bet = models.PositiveIntegerField(_("Начальная ставка"))
     author = models.ForeignKey(Profile, on_delete=models.CASCADE,
-                               verbose_name=_("Автор"))
+                               verbose_name=_("Автор"), related_name="posts")
     description = models.TextField(_("Описание"))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
     main_image = models.ImageField(upload_to="auction/images",
                                    verbose_name=_("Отображаемая картинка"))
+    liked_by = models.ManyToManyField(Profile)
 
     class Meta:
         db_table = "Post"
