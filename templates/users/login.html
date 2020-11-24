@@ -5,22 +5,29 @@
 {% endblock %}
 
 {% block content %}
-    <div class="">
-        <form method="POST">{% csrf_token %}
-             {% for field in form %}
-                {% if not field.is_hidden %}
-                    <div class="form-group">
-                        <label for="{{ field.auto_id }}" class="text-dark">{{ field.label_tag }} </label>
-                        {{ field }}
+    <div class="wrapper">
+        <div class="content-box login p-3">
+            <h3 class="text-center mb-4">Вход</h3>
+            <form method="POST">{% csrf_token %}
+                {% for field in form %}
+                    {% if not field.is_hidden %}
+                        <div class="form-group row">
+                            <label for="{{ field.auto_id }}"
+                                   class="col-sm-2 col-form-label text-dark">{{ field.label_tag }} </label>
+
+                            <div class="col-sm-10">
+                                {{ field }}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                {% if form.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        Вы ввели неверный логин или пароль, попробуйте ещё раз.
                     </div>
                 {% endif %}
-            {% endfor %}
-            {% if form.errors %}
-                <div class="alert alert-danger" role="alert">
-                    Ваши логін і пароль не збігаються. Будь ласка, спробуйте ще раз.
-                </div>
-            {% endif %}
-            <button type="submit" class="btn btn-success w-50 mt-3">Ввойти</button>
-        </form>
+                <button type="submit" class="btn btn-success w-50 mt-1">Войти</button>
+            </form>
+        </div>
     </div>
 {% endblock %}

@@ -24,7 +24,7 @@
     <div class="container-fluid mt-4">
         <div class="card-columns">
             {% for post in posts %}
-                <div class="card mb-4 border-dark">
+                <div class="card mb-4 border-dark shadow">
                     <a href="{{ post.get_absolute_url }}" class="text-white"
                        style="position:absolute; left: 15px; top: 10px;"><b>{{ post.title }}</b></a>
                     <a href="{{ post.get_absolute_url }}">
