@@ -12,6 +12,65 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     {# end bootsrap #}
+    <style type="text/css">
+        .wrapper {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+            min-height: 80vh;
+            padding: 20px;
+        }
+
+        .content-box {
+            -webkit-border-radius: 10px 10px 10px 10px;
+            border-radius: 10px 10px 10px 10px;
+            background: #fff;
+            padding: 30px;
+            width: 90%;
+            max-width: 800px;
+            position: relative;
+            padding: 0px;
+            -webkit-box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
+            box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .login {
+            max-width: 450px;
+        }
+
+        @media (max-width: 575.98px) {
+            .card-columns {
+                column-count: 1;
+            }
+        }
+
+        @media (min-width: 576px) and (max-width: 767.98px) {
+            .card-columns {
+                column-count: 2;
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 1199px) {
+            .card-columns {
+                column-count: 3;
+            }
+        }
+
+        @media (min-width: 1200px) and (max-width: 1919px) {
+            .card-columns {
+                column-count: 4;
+            }
+        }
+
+        @media (min-width: 1920px) {
+            .card-columns {
+                column-count: 5;
+            }
+        }
+    </style>
 </head>
 <body>
 <nav class="navbar navbar-light navbar-expand bg-white justify-content-between sticky-top border-bottom">
@@ -21,12 +80,12 @@
                 <a href="{% url 'post-list' %}" class="navbar-brand">EasyAuction</a>
             </li>
             {% if user.is_authenticated %}
-            <li class="nav-item text-center">
-                <a href="{% url 'post-create' %}" class="nav-link text-info btn">Создать лот</a>
-            </li>
-            <li class="nav-item text-center">
-                <a href="" class="nav-link text-info btn">Избранное</a>
-            </li>
+                <li class="nav-item text-center">
+                    <a href="{% url 'post-create' %}" class="nav-link text-info btn">Создать лот</a>
+                </li>
+                <li class="nav-item text-center">
+                    <a href="" class="nav-link text-info btn">Избранное</a>
+                </li>
             {% endif %}
         </ul>
         <ul class="nav navbar-nav">
@@ -56,11 +115,11 @@
         </ul>
     </div>
 </nav>
-    {% block content %}
-        Nothing must be here.
-    {% endblock %}
-    {% block scripts %}
+{% block content %}
+    Nothing must be here.
+{% endblock %}
+{% block scripts %}
 
-    {% endblock %}
+{% endblock %}
 </body>
 </html>

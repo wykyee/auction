@@ -5,19 +5,27 @@
 {% endblock %}
 
 {% block content %}
-    <div class="col-12">
-        {% if user.avatar %}
-            <img src="{{ user.avatar.url }}" alt="profile avatar" height="250px">
-        {% else %}
-            <img src="/media/users/avatars/default.jpg" alt="profile avatar">
-        {% endif %}<hr>
-        {{ user.username }}<hr>
-        Имя: {{ user.first_name }}
-        <br>Фамилия: {{ user.last_name }}
-        <br>Дата рождения: {{ user.birthdate|date:"Y.m.d"}}<hr>
-        Email: {{ user.email }}<hr>
-        О себе: {{ user.info }}<hr>
-        <a href="{% url 'profile-change' %}" class="btn btn-primary">Изменить профиль</a>
-
+    <div class="wrapper">
+        <div class="content-box text-left p-3">
+            <p class="text-center">
+                {% if user.avatar %}
+                    <img src="{{ user.avatar.url }}" alt="profile avatar" height="250px">
+                {% else %}
+                    <img src="/media/users/avatars/default.jpg" alt="profile avatar">
+                {% endif %}
+            </p>
+            <hr>
+            <p><strong>Имя пользователя:</strong> {{ user.username }}</p>
+            <hr>
+            <p><strong>Имя:</strong> {{ user.first_name }}
+            <br><strong>Фамилия:</strong> {{ user.last_name }}
+            <br><strong>Дата рождения:</strong> {{ user.birthdate|date:"Y.m.d" }}</p>
+            <hr>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <hr>
+            <p><strong>О себе:</strong> {{ user.info }}</p>
+            <hr>
+            <p class="text-center"><a href="{% url 'profile-change' %}" class="btn btn-primary">Изменить профиль</a></p>
+        </div>
     </div>
 {% endblock %}

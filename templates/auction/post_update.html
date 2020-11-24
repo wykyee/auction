@@ -5,31 +5,35 @@
        class="btn btn-info btn-lg active mt-3 mb-3 ml-3">
         &#8592 Назад
     </a>
-    <div class="container">
-        <h2 class="display-5 text-center">Изменить информацию про лот</h2>
-        <div class="row mx-auto mb-3">
-            <div class="col-md">
-                <form method="POST" class="mb-5" enctype="multipart/form-data">{% csrf_token %}
-                    {% for field in form %}
-                        {% if not field.is_hidden and  field != form.main_image %}
-                            <div class="form-group">
-                                <label for="{{ field.auto_id }}">{{ field.label_tag }}</label>
-                                {{ field }}
-                                {% if field.errors %}
-                                    <div class="text-danger"> {{ field.errors }} </div>
-                                {% endif %}
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                    <div class="custom-file mb-3">
-                        {{ form.main_image }}
-                        <label class="custom-file-label" for="id_main_image">Выберите отображаемую картинку</label>
-                    </div>
-                    <input type="submit" class="btn btn-success"
-                           value="Принять изминения">
-                    <a href="{% url 'post-detail' object.pk %}"
-                       class="btn btn-danger">Отменить</a>
-                </form>
+    <div class="wrapper">
+        <div class="content-box p-3 text-left">
+            <h3 class="text-center mb-4">Изменить информацию про лот</h3>
+            <div class="row mx-auto mb-3">
+                <div class="col-md">
+                    <form method="POST" class="mb-5" enctype="multipart/form-data">{% csrf_token %}
+                        {% for field in form %}
+                            {% if not field.is_hidden and  field != form.main_image %}
+                                <div class="form-group">
+                                    <label for="{{ field.auto_id }}">{{ field.label_tag }}</label>
+                                    {{ field }}
+                                    {% if field.errors %}
+                                        <div class="text-danger"> {{ field.errors }} </div>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                        <div class="custom-file mb-3">
+                            {{ form.main_image }}
+                            <label class="custom-file-label" for="id_main_image">Выберите отображаемую картинку</label>
+                        </div>
+                        <div class="text-center">
+                            <input type="submit" class="btn btn-success"
+                                   value="Принять изминения">
+                            <a href="{% url 'post-detail' object.pk %}"
+                               class="btn btn-danger">Отменить</a>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

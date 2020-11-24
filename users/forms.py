@@ -14,7 +14,7 @@ class LoginForm(auth_forms.AuthenticationForm):
     Add label and styles to default authentication form
     """
     username = forms.CharField(
-        label='Логін',
+        label='Логин',
         widget=forms.TextInput(attrs={'class': 'form-control',
                                       'autocomplete': "off"})
     )

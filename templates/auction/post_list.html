@@ -24,18 +24,18 @@
     <div class="container-fluid mt-4">
         <div class="card-columns">
             {% for post in posts %}
-                <div class="card mb-4 border-dark" style="width: 22rem;">
+                <div class="card mb-4 border-dark shadow">
                     <a href="{{ post.get_absolute_url }}" class="text-white"
                        style="position:absolute; left: 15px; top: 10px;"><b>{{ post.title }}</b></a>
                     <a href="{{ post.get_absolute_url }}">
                         {% if post.main_image %}
                         <img src="{{ post.main_image.url }}" class="card-img-top" alt="Lights"
-                             style="width:100%">
+                             width="100%">
                         {% else %}
                         <img src="/media/auction/images/default_img.jpg" class="card-img-top" alt="Default car">
                         {% endif %}
                     </a>
-                    <div class="card-body" style="padding: 0; font-size: small">
+                    <div class="card-body p-0 text-sm">
                     <ul class="list-group list-group-flush"></ul>
                         <li class="list-group-item card-text">{{ post.description|truncatechars:120 }}</li>
                         <li class="list-group-item card-text">
