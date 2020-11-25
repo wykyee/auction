@@ -13,6 +13,10 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     {# end bootsrap #}
+    {# BRICKLAYER HERE #}
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bricklayer/0.4.2/bricklayer.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bricklayer/0.4.2/bricklayer.min.js"></script>
     <style type="text/css">
         .wrapper {
             display: flex;
@@ -43,32 +47,37 @@
         }
 
         @media (max-width: 575.98px) {
-            .card-columns {
-                column-count: 1;
+            .bricklayer-column-sizer {
+                /* divide by 3. */
+                width: 100%;
             }
         }
 
         @media (min-width: 576px) and (max-width: 767.98px) {
-            .card-columns {
-                column-count: 2;
+            .bricklayer-column-sizer {
+                /* divide by 3. */
+                width: 50%;
             }
         }
 
         @media (min-width: 768px) and (max-width: 1199px) {
-            .card-columns {
-                column-count: 3;
+            .bricklayer-column-sizer {
+                /* divide by 3. */
+                width: 33%;
             }
         }
 
         @media (min-width: 1200px) and (max-width: 1919px) {
-            .card-columns {
-                column-count: 4;
+            .bricklayer-column-sizer {
+                /* divide by 3. */
+                width: 25%;
             }
         }
 
         @media (min-width: 1920px) {
-            .card-columns {
-                column-count: 5;
+            .bricklayer-column-sizer {
+                /* divide by 3. */
+                width: 20%;
             }
         }
     </style>

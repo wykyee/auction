@@ -9,16 +9,16 @@
         <form method="GET">
             <div class="row">
                 <div class="col-md-2 col-12">
-                    {{sort_form.price}}
+                    {{ sort_form.price }}
                 </div>
                 <div class="col-md-2 col-12">
-                    {{sort_form.created}}
+                    {{ sort_form.created }}
                 </div>
                 <div class="col-md-2 col-12">
-                    {{sort_form.author}}
+                    {{ sort_form.author }}
                 </div>
                 <div class="col-md-2 col-12">
-                    {{sort_form.post_title}}
+                    {{ sort_form.post_title }}
                 </div>
                 <input type="hidden" name="only_favorites" value="{{ show_favorites }}">
                 <button class="btn btn-info">Сортировать</button>
@@ -26,38 +26,41 @@
         </form>
     </div>
     <div class="container-fluid mt-4">
-        <div class="card-columns">
+        <div class="bricklayer">
             {% for post in posts %}
                 <div class="card mb-4 border-dark shadow">
                     <a href="{{ post.get_absolute_url }}" class="text-dark"
                        style="position:absolute; left: 15px; top: 10px;"><b>{{ post.title|truncatechars:"35" }}</b></a>
                     <a href="{{ post.get_absolute_url }}">
                         {% if post.main_image %}
-                        <img src="{{ post.main_image.url }}" class="card-img-top" alt="Lights"
-                             width="100%">
+                            <img src="{{ post.main_image.url }}" class="card-img-top" alt="Lights"
+                                 width="100%">
                         {% else %}
-                        <img src="/media/auction/images/default_img.jpg" class="card-img-top" alt="Default car">
+                            <img src="/media/auction/images/default_img.jpg" class="card-img-top" alt="Default car">
                         {% endif %}
                     </a>
                     <div class="card-body p-0 text-sm">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item card-text">{{ post.description|truncatechars:120 }}</li>
-                        <li class="list-group-item card-text">
-                            Последняя ставка:
-                            {% if post.bets.last.amount %}
-                                {{ post.bets.last.amount }}
-                            {% else %}
-                                {{ post.initial_bet }}
-                            {% endif %}
-                            $
-                        </li>
-                        <li class="list-group-item card-text">
-                            Цена выкупа: {{ post.permanent_price }} $
-                        </li>
-                    </ul>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item card-text">{{ post.description|truncatechars:120 }}</li>
+                            <li class="list-group-item card-text">
+                                Последняя ставка:
+                                {% if post.bets.last.amount %}
+                                    {{ post.bets.last.amount }}
+                                {% else %}
+                                    {{ post.initial_bet }}
+                                {% endif %}
+                                $
+                            </li>
+                            <li class="list-group-item card-text">
+                                Цена выкупа: {{ post.permanent_price }} $
+                            </li>
+                        </ul>
                     </div>
                 </div>
             {% endfor %}
         </div>
     </div>
+    <script>
+        var bricklayer = new Bricklayer(document.querySelector('.bricklayer'))
+    </script>
 {% endblock %}
