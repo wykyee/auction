@@ -23,6 +23,12 @@ class Post(models.Model):
     main_image = models.ImageField(upload_to="auction/images",
                                    verbose_name=_("Отображаемая картинка"))
     liked_by = models.ManyToManyField(Profile)
+    bought_by = models.ForeignKey(Profile, on_delete=models.SET_NULL,
+                                  related_name='bought_posts', null=True)
+    available_till = models.DateTimeField(
+        verbose_name=_("Время, до которого лот можно купить"),
+        null=True, blank=True
+    )
 
     class Meta:
         db_table = "Post"

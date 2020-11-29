@@ -17,10 +17,6 @@ from users.services import (
 Profile = get_user_model()
 
 
-class BetsList(ListView):
-    pass
-
-
 class ProfileDetailView(LoginRequiredMixin, View):
     def get(self, request: HttpRequest) -> HttpResponse:
         context = {
