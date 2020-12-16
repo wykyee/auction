@@ -1,14 +1,21 @@
+import datetime
+
 from django import forms
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from auction.models import Bet, Post
 
 
+class DateInputCalendar(forms.DateInput):
+	input_type = "datetime-local"
+
+
 class BetForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
 		"""
-        Gets author for initial parameter to save it as author of post.
-        """
+		Gets author for initial parameter to save it as author of post.
+		"""
 		self.better = kwargs.pop('better', None)
 		self.post = kwargs.pop('post', None)
 		self.current_bet = kwargs.pop('current_bet', None)
@@ -23,8 +30,8 @@ class BetForm(forms.ModelForm):
 
 	def clean_amount(self) -> int:
 		"""
-        Checks if input amount is in limits.
-        """
+		Checks if input amount is in limits.
+		"""
 		data = self.cleaned_data["amount"]
 
 		if self.current_bet >= data or data >= self.post.permanent_price:
@@ -34,9 +41,9 @@ class BetForm(forms.ModelForm):
 
 	def save(self, commit=True):
 		"""
-        Saves user from request automatically as better and
-        post from init as post instance.
-        """
+		Saves user from request automatically as better and
+		post from init as post instance.
+		"""
 		bet = super(BetForm, self).save(commit=False)
 		bet.better = self.better
 		bet.post = self.post
@@ -46,6 +53,8 @@ class BetForm(forms.ModelForm):
 
 
 class PostForm(forms.ModelForm):
+	TODAY = timezone.localtime(timezone.now()).strftime('%d\%m\%Y, %H:%M')
+
 	title = forms.CharField(
 		widget=forms.TextInput(attrs={"class": "form-control"}),
 		label=_("Название"),
@@ -59,11 +68,17 @@ class PostForm(forms.ModelForm):
 		required=False, widget=forms.Textarea(attrs={"class": "form-control"}),
 		label=_("Описание"),
 	)
+	available_till = forms.DateTimeField(
+		required=True, widget=DateInputCalendar(
+			attrs={"class": "form-control", "min": f"{TODAY}"}
+		), label=_("Пост доступен до"),
+	)
 
 	class Meta:
 		model = Post
 		fields = ("title", "permanent_price",
-		          "initial_bet", "description", "main_image")
+		          "initial_bet", "description", "main_image",
+		          "available_till")
 		widgets = {
 			"permanent_price": forms.NumberInput(
 				attrs={"class": "form-control"}),
@@ -76,8 +91,8 @@ class PostForm(forms.ModelForm):
 
 	def save(self, commit=True):
 		"""
-        Saves user from request as author of created post.
-        """
+		Saves user from request as author of created post.
+		"""
 		post = super().save(commit=False)
 		post.author = self.author
 		if commit:
@@ -86,11 +101,12 @@ class PostForm(forms.ModelForm):
 
 	def clean(self):
 		"""
-        Validates data in permanent_price and initial_bet
-        """
+		Validates data in permanent_price and initial_bet
+		"""
 		cleaned_data = super().clean()
 		initial_bet = cleaned_data["initial_bet"]
 		permanent_price = cleaned_data["permanent_price"]
+		available_till = cleaned_data["available_till"]
 
 		if initial_bet == 0:
 			self.add_error("initial_bet",
@@ -103,6 +119,10 @@ class PostForm(forms.ModelForm):
 		if permanent_price <= initial_bet:
 			self.add_error("permanent_price",
 			               _("Цена выкупа не может быть меньше ставки"))
+
+		if available_till <= timezone.localtime(timezone.now()):
+			self.add_error("available_till",
+			               _("Дата невалидна"))
 
 		return cleaned_data
 
@@ -122,8 +142,8 @@ class PostUpdateForm(PostForm):
 
 	def clean(self):
 		"""
-        Validates data in permanent_price and current bet
-        """
+		Validates data in permanent_price and current bet
+		"""
 		cleaned_data = super(PostForm, self).clean()
 		permanent_price = cleaned_data["permanent_price"]
 		try:
@@ -136,9 +156,9 @@ class PostUpdateForm(PostForm):
 			               _("Цена выкупа не может быть < 0"))
 
 		if permanent_price <= bet:
-			self.add_error("permanent_price",
-			               _(
-				               "Цена выкупа не может быть меньше действующей ставки"))
+			self.add_error(
+				"permanent_price",
+				_("Цена выкупа не может быть меньше действующей ставки"))
 
 		return cleaned_data
 

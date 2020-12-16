@@ -1,11 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import QuerySet, Q
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import redirect
+from django.db.models import QuerySet
+from django.http import HttpRequest, HttpResponse, Http404
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
+from django.utils.timezone import now
 from django.views.generic import (
-    ListView, DetailView, CreateView, UpdateView, DeleteView, View
+    ListView, DetailView, CreateView, UpdateView, DeleteView
 )
 
 from .forms import BetForm, PostSortForm, PostCreateForm, PostUpdateForm
@@ -90,6 +91,14 @@ class PostDetail(DetailView):
 def make_bet(request: HttpRequest, pk: int) -> HttpResponse:
     if request.method == "POST":
         certain_post: Post = get_post_by_pk(pk)
+
+        try:
+            available = certain_post.available_till - now()
+            if available.days < 0:
+                raise Http404
+        except Exception as e:
+            pass
+
         current_bet: int = get_current_bet_for_post(certain_post)
 
         form = BetForm(data=request.POST,
@@ -142,4 +151,9 @@ def interact_with_favorites(request: HttpRequest, pk: int) -> HttpResponse:
         certain_post.liked_by.remove(user)
 
     return redirect("post-detail", pk=pk)
+
+
+@login_required
+def post_buy(request: HttpRequest, pk: int) -> HttpResponse:
+    return render(request, "auction/post_buy.html")
 
