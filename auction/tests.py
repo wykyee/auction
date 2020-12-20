@@ -36,7 +36,7 @@ class ModelTest(TestCase):
 class PostFormTest(TestCase):
 	@classmethod
 	def setUpTestData(cls):
-		get_user_model().objects.create(**{'username': "test",
+		get_user_model().objects.create(**{'username': "testuser",
 		                                   'password': "123"})
 
 	def test_initial_bet_zero(self):
@@ -49,7 +49,7 @@ class PostFormTest(TestCase):
 			) + timezone.timedelta(days=1)
 		}
 		form = PostForm(data=form_data,
-		                author=get_user_model().objects.get(id=1))
+		                author=get_user_model().objects.get(username="testuser"))
 		self.assertFalse(form.is_valid())
 
 	def test_permanent_price_zero(self):
@@ -62,7 +62,7 @@ class PostFormTest(TestCase):
 			) + timezone.timedelta(days=1)
 		}
 		form = PostForm(data=form_data,
-		                author=get_user_model().objects.get(id=1))
+		                author=get_user_model().objects.get(username="testuser"))
 		self.assertFalse(form.is_valid())
 
 	def test_permanent_less_initial(self):
@@ -75,7 +75,7 @@ class PostFormTest(TestCase):
 			) + timezone.timedelta(days=1)
 		}
 		form = PostForm(data=form_data,
-		                author=get_user_model().objects.get(id=1))
+		                author=get_user_model().objects.get(username="testuser"))
 		self.assertFalse(form.is_valid())
 
 	def test_available_till_less_now(self):
@@ -88,5 +88,5 @@ class PostFormTest(TestCase):
 			) - timezone.timedelta(days=1)
 		}
 		form = PostForm(data=form_data,
-		                author=get_user_model().objects.get(id=1))
+		                author=get_user_model().objects.get(username="testuser"))
 		self.assertFalse(form.is_valid())
