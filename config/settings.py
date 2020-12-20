@@ -1,15 +1,15 @@
 import os
 from pathlib import Path
+import env_file
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = '7kr+y3&9!*a$q!&t&gw)yjfj(8e1x_@=*6%9ttna_1lft*18qn'
+env = env_file.get(path=os.path.join(BASE_DIR, '.env'))
 
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
+SECRET_KEY = env.get('DJANGO_SECRET_KEY')
+ALLOWED_HOSTS = env.get('DJANGO_ALLOWED_HOSTS').split(' ')
+DEBUG = env.get('DJANGO_DEBUG')
 
 # Application definition
 
@@ -42,8 +42,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -62,11 +61,16 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": env.get('POSTGRES_ENGINE'),
+        "NAME": env.get('POSTGRES_DB'),
+        "USER": env.get('POSTGRES_USER'),
+        "PASSWORD": env.get('POSTGRES_PASSWORD'),
+        "HOST": env.get('POSTGRES_HOST'),
+        "PORT": int(env.get('POSTGRES_PORT')),
     }
 }
+
 
 
 # Password validation
